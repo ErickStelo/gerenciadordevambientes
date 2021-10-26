@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gerenciamento de Áreas</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="vuelidate/dist/vuelidate.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div id="app">
+        <div class="row" style="padding: 20px;">
+            <div class="col-md-12">
+                <h3 class="text-light fw-light m-0 text-center">Gerenciador de áreas de desenvolvimento - Perigeus&ensp;<span style="color: #162634;" class="badge bg-light">ALPHA</span></h3>
+            </div>
+            <div class="col-md-12" style="padding-top: 20px;">
+                <ul class="nav nav-tabs" style="background-color: #f1f1f1;" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active tab-button" id="criararea-tab" data-bs-toggle="tab" data-bs-target="#criar-area" type="button" role="tab" aria-controls="criar-area" aria-selected="true"><i class="fa fa-plus" aria-hidden="true"></i>&ensp;CRIAR AMBIENTE</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link tab-button" id="projects-list-tab" data-bs-toggle="tab" data-bs-target="#projects-list" type="button" role="tab" aria-controls="projects-list" aria-selected="false"><i class="fa fa-cubes" aria-hidden="true"></i>&ensp;AMBIENTES CRIADOS</button>
+                    </li>
+
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="criar-area" style="background-color: #ffffff;" role="tabpanel" aria-labelledby="criararea-tab">
+                        <div class="row" style="padding: 20px 30px;">
+                            <%- include('partials/create-form') %>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="projects-list" style="background-color: #ffffff;" role="tabpanel" aria-labelledby="projects-list-tab">
+                        <div class="row" style="padding: 20px 30px;">
+                            <%- include('partials/projects-list') %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="fw-light" style="color: #868686;">2021 © Erick Stelo</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-material"></script>
+<script src="vue_script.js"></script>
+</html>

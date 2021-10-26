@@ -1,0 +1,38 @@
+<div class="col-md-12 pb-3">
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" v-model="formCreate.clonar_data" name="clonar_data" id="clonar_data" value="true">
+        <label class="form-check-label" for="clonar_data">
+            Clonar arquivos de data (arquivos de upload, imagens...)
+        </label>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <label for="branch_name" class="form-label">Branch&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Branch que deverá ser usada para criar a área"></i></label>
+    <input type="text" class="form-control" name="branch_name"  v-model='formCreate.branch' id="branch_name" aria-describedby="helpId" placeholder="">
+</div>
+<div class="col-md-2">
+    <label for="area_name" class="form-label">Nome p/ área&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Necessário apenas quando já existir uma area usando a mesma branch, exemplo: releaseXXapresentacao, releaseXXdemonstracao. Na falta desse parametro, o nome da area será o mesmo da branch"></i></label>
+    <input type="text" class="form-control" name="area_name" id="area_name" v-model='formCreate.area_name' aria-describedby="helpId" placeholder="">
+</div>
+<div class="col-md-2">
+    <label for="pasta_banco-cliente" class="form-label">Pasta/Nome do Banco cliente</label>
+    <input type="text" class="form-control" name="pasta_banco-cliente" v-model='formCreate.client_name' id="pasta_banco-cliente" aria-describedby="helpId" placeholder="">
+</div>
+<div class="col-md-3" v-if='formCreate.clonar_data === true'>
+    <div class="mb-3">
+        <label for="servidor_cliente" class="form-label">Servidor</label>
+        <select class="form-control" v-model='formCreate.server_cliente' name="servidor_cliente" id="servidor_cliente">
+            <option selected="selected" :value="null">Selecionar</option>
+            <option v-for='sv in serverList' :value='sv.ip'>{{sv.nome}}</option>
+        </select>
+    </div>
+</div>
+<div class="col-md-1">
+    <label for="porta" class="form-label">Porta</label>
+    <input type="text" v-on:blur='checkPort()' class="form-control" v-model='formCreate.porta' name="porta" id="porta" aria-describedby="helpId" placeholder="">
+    <small id="helpId" class="form-text text-muted"></small>
+</div>
+<div class="col-md-12 text-end pt-3">
+    <button type="button" v-on:click='createArea()' class="btn btn-outline-success">Criar novo ambiente</button>
+</div>

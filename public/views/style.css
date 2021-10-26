@@ -1,0 +1,53 @@
+body{
+    background-color: #162634;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 13px !important;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.form-label{
+    font-weight: 500;
+    font-size: 12px;
+    padding: 0;
+    margin: 4px 0;
+    color: #4f4f4f;
+}
+
+#helpId{
+    color: #989898 !important;
+    font-size: 11px;
+}
+
+.tab-button{
+    padding: 20px;
+    font-weight: 500;
+}
+
+.btn-stilized{
+    background-color: #294b69;
+    color: #fff;
+    /* border: 1px; */
+}
+.btn-stilized:hover{
+    color: #ff8400;
+    background-color: #2a4258;
+}
+
+.help-icon{
+    cursor: pointer;
+}

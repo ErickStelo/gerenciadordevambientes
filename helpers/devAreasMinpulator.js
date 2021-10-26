@@ -182,7 +182,7 @@ module.exports = {
         }).then(success => {
             console.log('SUCESSO');
         }).catch(error => {
-            console.log('ERROR', error.response.data);
+            console.log('ERROR', error.response);
 
         })
     },

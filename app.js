@@ -8,7 +8,7 @@ var config = require(path.join(__dirname, '/configs.js'))
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(timeout(1800000));
+// app.use(timeout(1800000));
 app.use(express.json());
 app.use(express.json({
     type: 'application/vnd.api+json'

@@ -45,7 +45,9 @@ var app = new Vue({
                 url: '/action/deleteAmbient',
                 data: {
                     ambientName: area,
-                }
+                },
+                timeout: 0
+
             }).then(function(response) {
                 Swal.close();
                 Swal.fire({
@@ -86,7 +88,8 @@ var app = new Vue({
                 axios({
                     method: 'post',
                     url: '/action/createArea',
-                    data: this.formCreate
+                    data: this.formCreate,
+                    timeout: 0
                 }).then(function(response) {
                     console.log(response.data);
                     Swal.close();
@@ -124,7 +127,8 @@ var app = new Vue({
                 url: '/action/checkport',
                 data: {
                     port: this.formCreate.porta,
-                }
+                },
+                timeout: 0
             }).then(function(response) {
                 if (response.data.success === 'Porta em uso, selecione outra') {
                     Swal.fire({

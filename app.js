@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var manipulator = require(path.join(__dirname, 'helpers/devAreasMinpulator.js'))
-var config = require(path.join(__dirname, 'config.js'))
+var config = require(path.join(__dirname, '/configs.js'))
 
 
 app.use(express.urlencoded({

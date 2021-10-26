@@ -9,7 +9,8 @@ var app = new Vue({
             porta: null,
             branch: null,
             area_name: null,
-            client_name: null
+            client_name: null,
+            usuario_mattermost: null
         },
         serverList:[
             {nome:'1', ip:'172.31.0.61'},
@@ -75,16 +76,16 @@ var app = new Vue({
 
             if(msg.length === 0){
 
-                Swal.fire({
-                    title: 'Criando ambiente',
-                    html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é criado, isso pode levar alguns minutos</p>',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,    
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                    willClose: () => {}
-                })
+                // Swal.fire({
+                //     title: 'Criando ambiente',
+                //     html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é criado, isso pode levar alguns minutos</p>',
+                //     allowOutsideClick: false,
+                //     allowEscapeKey: false,    
+                //     didOpen: () => {
+                //         Swal.showLoading()
+                //     },
+                //     willClose: () => {}
+                // })
                 axios({
                     method: 'post',
                     url: '/action/createArea',
@@ -96,9 +97,7 @@ var app = new Vue({
                     Swal.fire({
                         title: 'Successo!',
                         html: `
-                    <p style="font-size: 14px;">O ambiente foi criado e está sendo iniciado, logo poderá ser acessado em:</p><br>
-                        <p style='font-size:16px'><a href="http://${app.formCreate.area_name != null ? app.formCreate.area_name : app.formCreate.branch}-admin.perigeus.com.br" target="_blank">http://${app.formCreate.area_name != null ? app.formCreate.area_name : app.formCreate.branch}-admin.perigeus.com.br</a></p><br>
-                        <p style='font-size:16px'><a href="http://${app.formCreate.area_name != null ? app.formCreate.area_name : app.formCreate.branch}-site.perigeus.com.br" target="_blank">http://${app.formCreate.area_name != null ? app.formCreate.area_name : app.formCreate.branch}-site.perigeus.com.br</a></p>
+                    <p style="font-size: 14px;">O processo de criação do ambiente foi iniciado, você será notificado em seu mattermost quando terminar!</p><br>
                     `,
                         icon: 'success',
                         confirmButtonText: 'Fechar'

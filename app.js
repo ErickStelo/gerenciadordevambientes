@@ -56,7 +56,8 @@ app.post('/action/createArea', async function(req, res) {
     manipulator.createArea(req.body).then(success => {
         return res.status(200).json(success);
     }).catch(error =>{
-
+        console.log(error);
+        res.status(500).json()
     })
 });
 

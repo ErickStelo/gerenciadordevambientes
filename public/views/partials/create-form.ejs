@@ -30,8 +30,14 @@
 </div>
 <div class="col-md-1">
     <label for="porta" class="form-label">Porta</label>
-    <input type="text" v-on:blur='checkPort()' class="form-control" v-model='formCreate.porta' name="porta" id="porta" aria-describedby="helpId" placeholder="">
+    <input type="number" v-on:blur='checkPort()' class="form-control" v-model='formCreate.porta' name="porta" id="porta" aria-describedby="helpId" placeholder="">
     <small id="helpId" class="form-text text-muted"></small>
+</div>
+<div class="row pt-3">
+    <div class="col-md-2">
+        <label for="usuario_mattermost" class="form-label">Usuário Mattermost&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Informe o seu usuário do Mattermost para receber uma notificação assim que a área foi criada, caso contrário, será notificado no canal Dev Ambientes"></i></label>
+        <input type="text" class="form-control" v-model='formCreate.usuario_mattermost' name="usuario_mattermost" id="usuario_mattermost" aria-describedby="helpId" placeholder="">
+    </div>
 </div>
 <div class="col-md-12 text-end pt-3">
     <button type="button" v-on:click='createArea()' class="btn btn-outline-success">Criar novo ambiente</button>

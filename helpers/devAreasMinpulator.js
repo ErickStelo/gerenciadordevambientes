@@ -126,7 +126,7 @@ module.exports = {
                 }
                 if (stdout) {
                     console.log('Starting instance');
-                    var process = exec(`ssh webmaster@172.31.0.50 "export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production"`, (error, stdout, stderr) => {
+                    var process = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
                         if (error) {
                             console.log('NAO FOI-1', error.message);
                             resolve();

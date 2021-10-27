@@ -18,13 +18,22 @@ app.set('views', path.join(__dirname, '/public/views'));
 app.use(express.static(__dirname + '/public/views'));
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', async function(req, res) {
-    var list = await manipulator.getProjects();
-    res.render('index', {
-        list: list
+    res.render('index')
+});
+app.get('/action/getAmbients', async function(req, res) {
+    manipulator.getAmbients().then(result =>{
+        res.status(200).json({
+            ambientList: result
+        })
+    }).catch(error =>{
+        return res.status(500).json({
+            ambientList: []
+        });
     })
 });
+
 app.post('/action/deleteAmbient', async function(req, res) {
-    manipulator.removeDev(req.body.ambientName).then(r=>{
+    manipulator.removeAmbient(req.body.ambientName).then(r=>{
         res.status(200).json({
             message: 'CAIU'
         })
@@ -35,6 +44,14 @@ app.post('/action/deleteAmbient', async function(req, res) {
              message: `Falha ao remover`
            }]
         });
+    })
+});
+
+app.post('/action/restartAmbient', async function(req, res) {
+    manipulator.restartAmbient(req.body.ambientName).then(r=>{
+        res.status(204).json()
+    }).catch(error =>{
+        return res.status(500).json({message: error});
     })
 });
 
@@ -53,7 +70,7 @@ app.post('/action/checkport', async function(req, res) {
 });
 
 app.post('/action/createArea', async function(req, res) {
-    manipulator.createArea(req.body).then(success => {
+    manipulator.createAmbient(req.body).then(success => {
         return res.status(200).json(success);
     }).catch(error =>{
         console.log(error);
@@ -68,9 +85,6 @@ app.get('/action/killPid/:pid', async function(req, res) {
         return res.status(500).json(error);
     })
 });
-
-
-
 
 
 app.listen(config.porta, () => {

@@ -26,10 +26,31 @@ var app = new Vue({
             {nome:'11', ip:'172.31.0.71'},
             {nome:'12', ip:'172.31.0.72'},
             {nome:'13', ip:'172.31.0.73'},
-        ]
+        ],
+        ambientsLists:[],
     },
 
     methods: {
+        restartAmbient: function(area) {
+            console.log(area);
+            axios({
+                method: 'post',
+                url: '/action/restartAmbient',
+                data: {
+                    ambientName: area,
+                },
+                timeout: 0
+
+            }).then(function(response) {
+                Swal.close();
+                Swal.fire({
+                    title: 'Successo!',
+                    text: 'Instrução para reiniciar enviado!',
+                    icon: 'success',
+                    confirmButtonText: 'Fechar'
+                })
+            });
+        },
         removeArea: function(area) {
             Swal.fire({
                 title: 'Removendo ambiente',
@@ -57,9 +78,20 @@ var app = new Vue({
                     icon: 'success',
                     confirmButtonText: 'Fechar'
                 }).then(result =>{
-                    window.location.reload(false); 
-
+                    app.getAmbients();
                 })
+            });
+        },
+        getAmbients: function(area) {
+            axios({
+                method: 'get',
+                url: '/action/getAmbients',
+                data: {},
+                timeout: 0
+
+            }).then(function(response) {
+                app.ambientsLists = response.data.ambientList
+                console.log(response.data);
             });
         },
         createArea: function() {
@@ -72,7 +104,6 @@ var app = new Vue({
             if(this.formCreate.client_name == null || (this.formCreate.client_name.trim()) == 0) msg+='<li><p>Não informado a pasta/nome do banco cliente</p></li>';
             if(this.formCreate.client_name != null && (this.formCreate.client_name.split(' ')).length > 1) msg+='<li><p>Não pode conter espaços no pasta/nome do banco cliente</p></li>';
             if(this.formCreate.clonar_data === true && this.formCreate.server_cliente === 'null') msg+='<li><p>Servidor do cliente não selecionado</p></li>';
-
 
             if(msg.length === 0){
 

@@ -1,17 +1,20 @@
-<% list.forEach(function(proj) {%>
-    <div class="col-md-2 pt-4">
-        <div class="card">
-            <div class="card-header">
-                <b><%= proj.name %></b>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-stilized" title="Remover ambiente" v-on:click='removeArea("<%= proj.name %>")'><i class="fa fa-trash" aria-hidden="true"></i></button>
-                        <button type="button" class="btn btn-stilized" title="Reiniciar instancia do ambiente"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-                      </div>
+    <div class="row">
+        
+        <div class="col-md-2 pt-4" v-for='ambient in ambientsLists'>
+            <div class="card">
+                <div class="card-header">
+                    <b>{{ambient.name}}</b>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a class="btn btn-stilized" title='Acessar o admin' v-bind:href="'http://' +ambient.name + '-admin.perigeus.com.br'" target="_blank" role="button"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            <button type="button" class="btn btn-stilized" title="Remover ambiente" v-on:click='removeArea(ambient.name)'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-stilized" title="Reiniciar instancia do ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <% }); %>
+        

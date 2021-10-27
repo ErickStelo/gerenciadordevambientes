@@ -179,32 +179,32 @@ module.exports = {
     
                 command += `-c -e 172.31.0.99 -f webmaster -g pgsql.production -i ${data.client_name} `;
     
-                if (data.clonar_data === true && data.server_cliente != 'null' && data.server_cliente.length > 4) {
+                if (data.clonar_data === true && data.server_cliente != 'null' && data.server_cliente != null && data.server_cliente.length > 4) {
                     command += `-C -E ${data.server_cliente} -F webmaster -G pma2018 -K ${data.client_name} `;
                 }
     
                 command += `-H 172.31.0.60 -I webmaster -J pma2018 -p ${data.porta}`;
                 console.log('>', command);
     
-                var process = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {maxBuffer: 1024 * 5000}, (error, stdout, stderr) => {
-                    if (stdout) {
-                        creatingArea = false;
-                        console.log('Starting instance');
-                        var process = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
-                            if (error) {
-                                console.log('NAO FOI-1');
+                // var process = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {maxBuffer: 1024 * 5000}, (error, stdout, stderr) => {
+                //     if (stdout) {
+                //         creatingArea = false;
+                //         console.log('Starting instance');
+                //         var process = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
+                //             if (error) {
+                //                 console.log('NAO FOI-1');
     
-                            }
-                            if (stderr) {
-                                console.log('NAO FOI');
-                            }
-                            if (stdout) {
-                                module.exports.notificarMattermost(`A área ${data.area_name.length > 0 ? data.area_name : data.branch} foi criada! Acesse usando:\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br`, (data.usuario_mattermost != null && data.usuario_mattermost.length > 0 ? `@${data.usuario_mattermost}` : 'dev-ambientes'))
-                            }
-                        })
-                        console.log('Process ID (PID)', process.pid);
-                    }
-                });
+                //             }
+                //             if (stderr) {
+                //                 console.log('NAO FOI');
+                //             }
+                //             if (stdout) {
+                //                 module.exports.notificarMattermost(`A área ${data.area_name.length > 0 ? data.area_name : data.branch} foi criada! Acesse usando:\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br`, (data.usuario_mattermost != null && data.usuario_mattermost.length > 0 ? `@${data.usuario_mattermost}` : 'dev-ambientes'))
+                //             }
+                //         })
+                //         console.log('Process ID (PID)', process.pid);
+                //     }
+                // });
                 console.log('Process ID (PID)', process.pid);
     
                 resolve({

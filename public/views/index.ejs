@@ -21,7 +21,7 @@
             <div class="col-md-12" style="padding-top: 20px;">
                 <ul class="nav nav-tabs" style="background-color: #f1f1f1;" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active tab-button" id="criararea-tab" data-bs-toggle="tab" data-bs-target="#criar-area" type="button" role="tab" aria-controls="criar-area" aria-selected="true"><i class="fa fa-plus" aria-hidden="true"></i>&ensp;CRIAR AMBIENTE</button>
+                        <button class="nav-link active tab-button" id="criararea-tab" v-on:click='getDataForCreate()' data-bs-toggle="tab" data-bs-target="#criar-area" type="button" role="tab" aria-controls="criar-area" aria-selected="true"><i class="fa fa-plus" aria-hidden="true"></i>&ensp;CRIAR AMBIENTE</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link tab-button" v-on:click='getAmbients()' id="projects-list-tab" data-bs-toggle="tab" data-bs-target="#projects-list" type="button" role="tab" aria-controls="projects-list" aria-selected="false"><i class="fa fa-cubes" aria-hidden="true"></i>&ensp;AMBIENTES CRIADOS</button>

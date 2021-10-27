@@ -12,21 +12,7 @@ var app = new Vue({
             client_name: null,
             usuario_mattermost: null
         },
-        serverList:[
-            {nome:'1', ip:'172.31.0.61'},
-            {nome:'2', ip:'172.31.0.62'},
-            {nome:'3', ip:'172.31.0.63'},
-            {nome:'4', ip:'172.31.0.64'},
-            {nome:'5', ip:'172.31.0.65'},
-            {nome:'6', ip:'172.31.0.66'},
-            {nome:'7', ip:'172.31.0.67'},
-            {nome:'8', ip:'172.31.0.68'},
-            {nome:'9', ip:'172.31.0.69'},
-            {nome:'10', ip:'172.31.0.70'},
-            {nome:'11', ip:'172.31.0.71'},
-            {nome:'12', ip:'172.31.0.72'},
-            {nome:'13', ip:'172.31.0.73'},
-        ],
+        serverList:[],
         ambientsLists:[],
     },
 
@@ -84,6 +70,19 @@ var app = new Vue({
             });
         },
 
+        getDataForCreate: function(area) {
+            axios({
+                method: 'get',
+                url: '/action/getDataForCreate',
+                data: {},
+                timeout: 0
+
+            }).then(function(response) {
+                app.serverList = response.data.serversList
+                // console.log(response.data);
+            });
+        },
+
         getAmbients: function(area) {
             axios({
                 method: 'get',
@@ -106,7 +105,7 @@ var app = new Vue({
             if(this.formCreate.area_name != null && (this.formCreate.area_name.split(' ')).length > 1) msg+='<li><p>Não pode conter espaços no nome da área</p></li>';
             if(this.formCreate.client_name == null || (this.formCreate.client_name.trim()) == 0) msg+='<li><p>Não informado a pasta/nome do banco cliente</p></li>';
             if(this.formCreate.client_name != null && (this.formCreate.client_name.split(' ')).length > 1) msg+='<li><p>Não pode conter espaços no pasta/nome do banco cliente</p></li>';
-            if(this.formCreate.clonar_data === true && this.formCreate.server_cliente === 'null') msg+='<li><p>Servidor do cliente não selecionado</p></li>';
+            if(this.formCreate.clonar_data === true && (this.formCreate.server_cliente === 'null' || this.formCreate.server_cliente === null)) msg+='<li><p>Servidor do cliente não selecionado</p></li>';
 
             if(msg.length === 0){
 
@@ -153,7 +152,7 @@ var app = new Vue({
                 });
             }
         },
-
+        
         checkPort: function() {
             console.log('> Checking port', app.formCreate.porta);
             axios({
@@ -183,5 +182,8 @@ var app = new Vue({
                 }
             });
         }
-    }
+    },
+    mounted: function () {
+        this.getDataForCreate();
+    },
 })

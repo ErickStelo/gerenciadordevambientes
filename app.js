@@ -69,6 +69,13 @@ app.post('/action/checkport', async function(req, res) {
     })
 });
 
+app.get('/action/getDataForCreate', async function(req, res) {
+    console.log(config.serverList)
+    res.status(200).json({
+        serversList: config.serverList
+    })
+});
+
 app.post('/action/createArea', async function(req, res) {
     manipulator.createAmbient(req.body).then(resolve => {
         return res.status(200).json(resolve);

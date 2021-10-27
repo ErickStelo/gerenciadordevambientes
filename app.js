@@ -70,8 +70,8 @@ app.post('/action/checkport', async function(req, res) {
 });
 
 app.post('/action/createArea', async function(req, res) {
-    manipulator.createAmbient(req.body).then(success => {
-        return res.status(200).json(success);
+    manipulator.createAmbient(req.body).then(resolve => {
+        return res.status(200).json(resolve);
     }).catch(error =>{
         console.log(error);
         res.status(500).json()

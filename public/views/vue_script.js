@@ -51,6 +51,7 @@ var app = new Vue({
                 })
             });
         },
+
         removeArea: function(area) {
             Swal.fire({
                 title: 'Removendo ambiente',
@@ -82,6 +83,7 @@ var app = new Vue({
                 })
             });
         },
+
         getAmbients: function(area) {
             axios({
                 method: 'get',
@@ -94,6 +96,7 @@ var app = new Vue({
                 console.log(response.data);
             });
         },
+
         createArea: function() {
             var msg = '';
             if(this.formCreate.clonar_data == true && this.formCreate.ServerCliente === null) msg+='<li><p>Servidor do cliente não selecionado</p></li>';
@@ -126,14 +129,14 @@ var app = new Vue({
                     console.log(response.data);
                     Swal.close();
                     Swal.fire({
-                        title: 'Successo!',
-                        html: `
-                    <p style="font-size: 14px;">O processo de criação do ambiente foi iniciado, você será notificado em seu mattermost quando terminar!</p><br>
-                    `,
-                        icon: 'success',
+                        title: `${response.data.icon === 'success' ? 'Sucesso!' : 'Erro!'}`,
+                        html: `${response.data.message}`,
+                        icon: `${response.data.icon}`,
                         confirmButtonText: 'Fechar'
                     }).then((result) => {
-                        window.location.reload(false); 
+                        if(response.data.icon === 'success'){
+                            window.location.reload(false); 
+                        }
                     });
                 });
 
@@ -150,6 +153,7 @@ var app = new Vue({
                 });
             }
         },
+
         checkPort: function() {
             console.log('> Checking port', app.formCreate.porta);
             axios({

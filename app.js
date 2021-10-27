@@ -70,7 +70,6 @@ app.post('/action/checkport', async function(req, res) {
 });
 
 app.get('/action/getDataForCreate', async function(req, res) {
-    console.log(config.serverList)
     res.status(200).json({
         serversList: config.serverList
     })

@@ -6,6 +6,7 @@ const _ = require('lodash');
 const req = require('express/lib/request');
 const config = require(path.join(__dirname, '../configs.js'))
 const axios = require('axios');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 module.exports = {
@@ -180,16 +181,9 @@ module.exports = {
                 'Content-Type': 'application/json'
             },
         }).then(success => {
-            console.log('SUCESSO');
+            console.log('> Notificado');
         }).catch(error => {
-            if(error.response.data){
-                console.log('ERROR', error.response.data);
-                
-            }else{
-                console.log('ERROR', error.response);
-                
-            }
-
+                console.log('ERROR', error);
         })
     },
 }

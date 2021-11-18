@@ -1,27 +1,27 @@
 <div class="col-md-12 pb-3">
     <div class="form-check form-check-inline">
         <input type="checkbox" class="form-check-input" v-model="formCreate.clonar_data" name="clonar_data" id="clonar_data" value="true">
-        <label class="form-check-label" for="clonar_data">
+        <label class="form-check-label" for="clonar_data" style="font-size: 12px;">
             Clonar arquivos de data (arquivos de upload, imagens...)
         </label>
     </div>
 </div>
 
 <div class="col-md-2">
-    <label for="branch_name" class="form-label">Branch&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Branch que deverá ser usada para criar a área"></i></label>
-    <input type="text" class="form-control" name="branch_name"  v-model='formCreate.branch' id="branch_name" aria-describedby="helpId" placeholder="">
+    <label for="branch_name" class="form-label"><span class='text-danger'>*</span>Branch&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" v-on:click='helpModal("branch_name")'></i></label>
+    <input type="text" class="form-control" name="branch_name" v-model='formCreate.branch' id="branch_name" aria-describedby="helpId" placeholder="">
 </div>
 <div class="col-md-2">
-    <label for="area_name" class="form-label">Nome p/ área&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Necessário apenas quando já existir uma area usando a mesma branch, exemplo: releaseXXapresentacao, releaseXXdemonstracao. Na falta desse parametro, o nome da area será o mesmo da branch"></i></label>
+    <label for="area_name" class="form-label">Nome p/ área&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" v-on:click='helpModal("area_name")'></i></label>
     <input type="text" class="form-control" name="area_name" id="area_name" v-model='formCreate.area_name' aria-describedby="helpId" placeholder="">
 </div>
 <div class="col-md-2">
-    <label for="pasta_banco-cliente" class="form-label">Pasta/Nome do Banco cliente</label>
+    <label for="pasta_banco-cliente" class="form-label"><span class='text-danger'>*</span>Pasta/Nome do Banco cliente</label>
     <input type="text" class="form-control" name="pasta_banco-cliente" v-model='formCreate.client_name' id="pasta_banco-cliente" aria-describedby="helpId" placeholder="">
 </div>
-<div class="col-md-3" v-if='formCreate.clonar_data === true'>
+<div class="col-md-1" v-if='formCreate.clonar_data === true'>
     <div class="mb-3">
-        <label for="servidor_cliente" class="form-label">Servidor</label>
+        <label for="servidor_cliente" class="form-label"><span class='text-danger'>*</span>Servidor</label>
         <select class="form-control" v-model='formCreate.server_cliente' name="servidor_cliente" id="servidor_cliente">
             <option selected="selected" :value="null">Selecionar</option>
             <option v-for='sv in serverList' :value='sv.ip'>{{sv.nome}}</option>
@@ -29,16 +29,43 @@
     </div>
 </div>
 <div class="col-md-1">
-    <label for="porta" class="form-label">Porta</label>
+    <label for="porta" class="form-label"><span class='text-danger'>*</span>Porta</label>
     <input type="number" v-on:blur='checkPort()' class="form-control" v-model='formCreate.porta' name="porta" id="porta" aria-describedby="helpId" placeholder="">
     <small id="helpId" class="form-text text-muted"></small>
 </div>
-<div class="row pt-3">
-    <div class="col-md-2">
-        <label for="usuario_mattermost" class="form-label">Usuário Mattermost&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" data-bs-toggle="tooltip" data-bs-html="true" title="Informe o seu usuário do Mattermost para receber uma notificação assim que a área foi criada, caso contrário, será notificado no canal Dev Ambientes"></i></label>
-        <input type="text" class="form-control" v-model='formCreate.usuario_mattermost' name="usuario_mattermost" id="usuario_mattermost" aria-describedby="helpId" placeholder="">
+<div class="col-md-2">
+    <label for="usuario_mattermost" class="form-label">Usuário Mattermost&ensp;<i class="fa fa-question-circle-o help-icon" aria-hidden="true" v-on:click='helpModal("usuario_mattermost")'></i></label>
+    <input type="text" class="form-control" v-model='formCreate.usuario_mattermost' name="usuario_mattermost" id="usuario_mattermost" aria-describedby="helpId" placeholder="">
+</div>
+<div class="col-md-5 pt-3">
+
+    <div class="card">
+        <div class="card-body">
+           <h5>Armazenamento do servidor</h5>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                      <th scope="col">Total</th>
+                      <th scope="col">Em uso</th>
+                      <th scope="col">Disponivel</th>
+                      <th scope="col">% em uso</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>{{sizes.total}}</td>             
+                        <td>{{sizes.used}}</td>             
+                        <td>{{sizes.disponivel}}</td>             
+                        <td>{{sizes.use}}</td>             
+                    </tr>
+                  </tbody>
+            </table>
+        </div>
     </div>
 </div>
-<div class="col-md-12 text-end pt-3">
+<div class="col-md-3">
+
+</div>
+<div class="col-md-4 text-end pt-3">
     <button type="button" v-on:click='createArea()' class="btn btn-stilized">Criar novo ambiente</button>
 </div>

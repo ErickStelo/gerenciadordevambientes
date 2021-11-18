@@ -1,20 +1,54 @@
     <div class="row">
-        
-        <div class="col-md-2 pt-4" v-for='ambient in ambientsLists'>
+        <div class="col-md-3">
+            <label>Exibição</label>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                <button type="button" v-on:click='formatoExibicao = "lista"' class="btn btn-sm" title="Formato de lista" v-on:click='removeArea(ambient.name)'><i class="fa fa-list" aria-hidden="true"></i></button>
+                <button type="button" v-on:click='formatoExibicao = "bloco"' class="btn btn-sm" title="Formato de bloco" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-th" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" v-if='formatoExibicao === "bloco"'>
+        <div class="col-sm-2 pt-4" v-for='ambient in ambientsLists'>
             <div class="card">
                 <div class="card-header">
                     <b>{{ambient.name}}</b>
                 </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <a class="btn btn-stilized" title='Acessar o admin' v-bind:href="'http://' +ambient.name + '-admin.perigeus.com.br'" target="_blank" role="button"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                            <button type="button" class="btn btn-stilized" title="Remover ambiente" v-on:click='removeArea(ambient.name)'><i class="fa fa-trash" aria-hidden="true"></i></button>
-                            <button type="button" class="btn btn-stilized" title="Reiniciar instancia do ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-refresh" aria-hidden="true"></i></button>
-                        </div>
+                <div class="card-body text-center">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a class="btn btn-stilized" title='Acessar o admin' v-bind:href="'http://' +ambient.name + '-admin.perigeus.com.br'" target="_blank" role="button"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <button type="button" class="btn btn-stilized btn-sm" title="Remover ambiente" v-on:click='removeArea(ambient.name)'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-stilized btn-sm" title="Reiniciar instancia do ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        <!-- <button type="button" class="btn btn-stilized btn-sm" title="Rodar o gulp neste ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-file-code-o" aria-hidden="true"></i></button> -->
+                        <button type="button" class="btn btn-stilized btn-sm" title="Executar pull na branch desta área" v-on:click='pullAmbient(ambient.name)'><i class="fa fa-code-fork" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        
+    <div class="row" v-if='formatoExibicao === "lista"'>
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ambiente</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for='ambient in ambientsLists'>
+                        <td scope="row">{{ambient.name}}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                <a class="btn btn-stilized" title='Acessar o admin' v-bind:href="'http://' +ambient.name + '-admin.perigeus.com.br'" target="_blank" role="button"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <button type="button" class="btn btn-stilized btn-sm" title="Remover ambiente" v-on:click='removeArea(ambient.name)'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-stilized btn-sm" title="Reiniciar instancia do ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                                <!-- <button type="button" class="btn btn-stilized btn-sm" title="Rodar o gulp neste ambiente" v-on:click='restartAmbient(ambient.name)'><i class="fa fa-file-code-o" aria-hidden="true"></i></button> -->
+                                <button type="button" class="btn btn-stilized btn-sm" title="Executar pull na branch desta área" v-on:click='pullAmbient(ambient.name)'><i class="fa fa-code-fork" aria-hidden="true"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>

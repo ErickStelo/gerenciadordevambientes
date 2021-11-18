@@ -1,4 +1,7 @@
-const {exec, spawn} = require('child_process');
+const {
+    exec,
+    spawn
+} = require('child_process');
 const path = require("path");
 const _ = require('lodash');
 const req = require('express/lib/request');
@@ -8,10 +11,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 function spawnCommand(command) {
     // var spw = spawn('sh', ['-c', command]);
-    var spw = spawn(command, [], {shell: true});
+    var spw = spawn(command, [], {
+        shell: true
+    });
     // spawn('sh', ['-c', command], {stdio: 'inherit'});
     return spw;
-} 
+}
 
 var creatingArea = false;
 
@@ -54,6 +59,39 @@ module.exports = {
             console.log('Process ID (PID)', process.pid);
         })
     },
+
+    getSizes: function(req) {
+        return new Promise((resolve, reject)=>{
+            let command = `${config.sshConection.length > 0 ? config.sshConection + ' "':''}df /dev/sda1 -h${config.sshConection.length > 0 ? '"':''}`;
+
+            var child = spawnCommand(command)
+    
+            var scriptOutput = "";
+    
+            child.stdout.setEncoding('utf8');
+            child.stdout.on('data', function(data) {
+                let dataSplited = data.split('\n');
+                let size = dataSplited[1].split(' ')
+                let sizesFilled = _.filter(size, (sz)=>{
+                    if(sz != '' && sz.length > 1){
+                        return sz;
+                    }
+                })
+                let sizes = {
+                    total: sizesFilled[1],
+                    used: sizesFilled[2],
+                    disponivel: sizesFilled[3],
+                    use: sizesFilled[4],
+                }
+                console.log(sizes);
+                resolve({
+                    sizes: sizes
+                })
+            });
+        })
+        
+    },
+
     restartAmbient: function(ambientName) {
         return new Promise((resolve, reject) => {
             if (ambientName != undefined && ambientName != '') {
@@ -76,6 +114,74 @@ module.exports = {
                     })
                 });
             }
+        })
+    },
+    pullAmbient: function(req) {
+        return new Promise((resolve, reject) => {
+            var ambientName = req.body.ambientName;
+            if (ambientName != undefined && ambientName != '') {
+                console.log('> Removing ambient', ambientName);
+                let command = `${config.sshConection.length > 0 ? config.sshConection + ' "':''}cd ${config.pathToPrepareBranch}/projects/${ambientName} && git branch${config.sshConection.length > 0 ? '"':''}`;
+                
+                let child1 = spawnCommand(command);
+                child1.stdout.setEncoding('utf8');
+                child1.stdout.on('data', function(data){
+                    var retChild1 = data.split(' ');
+                    const branch = retChild1[1].replace(/'\n'/g, '')
+                    console.log(branch);
+                    command = `${config.sshConection.length > 0 ? config.sshConection + ' "':''}cd ${config.pathToPrepareBranch}/projects/${ambientName} && git pull origin ${branch}${config.sshConection.length > 0 ? '"':''}`;
+                    let child2 = spawnCommand(command);
+                    child2.stdout.setEncoding('utf8');
+                    child2.on('close', function(code){
+                        if(code === 0){
+                            console.log('Finished pull command with code: ',code);
+                            resolve({});
+
+                        }else{
+                            reject({});
+
+                        }
+                    })
+                })
+
+                child1.stderr.on('data', (error)=>{
+                    reject({});
+                })
+            }
+
+            // OLD METHOD
+            // if (ambientName != undefined && ambientName != '') {
+            //     console.log('> Removing ambient', ambientName);
+            //     let command = `${config.sshConection.length > 0 ? config.sshConection + ' "':''}cd ${config.pathToPrepareBranch}/projects/${ambientName} && git branch${config.sshConection.length > 0 ? '"':''}`;
+            //     var process = exec(command, (error, stdout, stderr) => {
+            //         if (error) {
+            //             console.log('NAO FOI-1', error.message);
+            //             resolve();
+
+            //         }
+            //         if (stderr) {
+            //             console.log('NAO FOI', stderr);
+            //             resolve();
+            //         }
+            //         if (stdout) {
+            //             var aaa = stdout.split(' ');
+            //             const branch = aaa[1].replace(/'\n'/g, '')
+            //             console.log(branch);
+
+            //             command = `${config.sshConection.length > 0 ? config.sshConection + ' "':''}cd ${config.pathToPrepareBranch}/projects/${ambientName} && git pull origin ${branch}${config.sshConection.length > 0 ? '"':''}`;
+            //             console.log('> ', command);
+            //             let SpawnRemove = spawnCommand(command);
+            //             console.log('Process ID (PID)', SpawnRemove.pid);
+            //             SpawnRemove.on('close', function(code) {
+            //                 console.log('Exit with code', code);
+
+            //                 resolve({
+            //                     success: 'Comando para pull no ambiente realizado'
+            //                 })
+            //             });
+            //         }
+            //     });
+            // }
         })
     },
 
@@ -129,7 +235,7 @@ module.exports = {
             }
         })
     },
-    
+
     checkPort: function(port) {
         return new Promise((resolve, reject) => {
 
@@ -168,32 +274,34 @@ module.exports = {
     },
     createAmbient: function(data) {
         return new Promise((resolve, reject) => {
-            if(creatingArea === false){
+            if (creatingArea === false) {
                 creatingArea = true;
                 console.log('> Create a new ambient with params:', data);
                 var command = `./prepare_branch.sh -a -d -b ${data.branch} `
-    
+
                 if (data.area_name.length > 0) {
                     command += `-n ${data.area_name} `;
                 }
-    
+
                 command += `-c -e 172.31.0.99 -f webmaster -g pgsql.production -i ${data.client_name} `;
-    
+
                 if (data.clonar_data === true && data.server_cliente != 'null' && data.server_cliente != null && data.server_cliente.length > 4) {
                     command += `-C -E ${data.server_cliente} -F webmaster -G pma2018 -K ${data.client_name} `;
                 }
-    
+
                 command += `-H 172.31.0.60 -I webmaster -J pma2018 -p ${data.porta}`;
                 console.log('>', command);
-    
-                var CreateProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {maxBuffer: 1024 * 5000}, (error, stdout, stderr) => {
+
+                var CreateProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {
+                    maxBuffer: 1024 * 5000
+                }, (error, stdout, stderr) => {
                     if (stdout) {
                         creatingArea = false;
                         console.log('Starting instance');
                         var StartProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
                             if (error) {
                                 console.log('NAO FOI-1');
-    
+
                             }
                             if (stderr) {
                                 console.log('NAO FOI');
@@ -206,14 +314,16 @@ module.exports = {
                     }
                 });
                 console.log('Process ID (PID)', CreateProcess.pid);
-    
+
                 resolve({
                     icon: 'success',
-                    message:`<p style="font-size: 14px;">O processo de criação do ambiente foi iniciado, você será notificado em seu mattermost quando terminar!</p><br>`});
-            }else{
+                    message: `<p style="font-size: 14px;">O processo de criação do ambiente foi iniciado, você será notificado em seu mattermost quando terminar!</p><br>`
+                });
+            } else {
                 resolve({
                     icon: 'error',
-                    message:`<p style="font-size: 14px;">Outro processo de criação está em andamento. Tente novamente em alguns minutos</p><br>`});
+                    message: `<p style="font-size: 14px;">Outro processo de criação está em andamento. Tente novamente em alguns minutos</p><br>`
+                });
             }
         })
     },
@@ -252,7 +362,7 @@ module.exports = {
         }).then(success => {
             console.log('> Notificado');
         }).catch(error => {
-                console.log('ERROR', error);
+            console.log('ERROR', error);
         })
     },
 }

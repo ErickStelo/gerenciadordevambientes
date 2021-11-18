@@ -1,14 +1,14 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var manipulator = require(path.join(__dirname, 'helpers/devAreasMinpulator.js'))
-var config = require(path.join(__dirname, '/configs.js'))
+var manipulator = require(path.join(__dirname, 'helpers/devAreasMinpulator.js'));
+var config = require(path.join(__dirname, '/configs.js'));
+var package = require(path.join(__dirname, 'package.json'));
 
 
 app.use(express.urlencoded({
     extended: true
 }));
-// app.use(timeout(1800000));
 app.use(express.json());
 app.use(express.json({
     type: 'application/vnd.api+json'
@@ -18,7 +18,9 @@ app.set('views', path.join(__dirname, '/public/views'));
 app.use(express.static(__dirname + '/public/views'));
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', async function(req, res) {
-    res.render('index')
+    res.render('index',{
+        version: package.version
+    })
 });
 app.get('/action/getAmbients', async function(req, res) {
     manipulator.getAmbients().then(result =>{
@@ -29,6 +31,13 @@ app.get('/action/getAmbients', async function(req, res) {
         return res.status(500).json({
             ambientList: []
         });
+    })
+});
+app.get('/action/getSizes', async function(req, res) {
+    manipulator.getSizes().then(result =>{
+        res.status(200).json(result)
+    }).catch(error =>{
+        return res.status(500)
     })
 });
 
@@ -89,6 +98,14 @@ app.get('/action/killPid/:pid', async function(req, res) {
         return res.status(200).json(success);
     }).catch(error =>{
         return res.status(500).json(error);
+    })
+});
+
+app.post('/action/pullAmbient', async function(req, res) {
+    manipulator.pullAmbient(req).then(() => {
+        return res.status(200).json();
+    }).catch(error =>{
+        return res.status(500).json();
     })
 });
 

@@ -279,7 +279,7 @@ module.exports = {
                 console.log('> Create a new ambient with params:', data);
                 var command = `./prepare_branch.sh -a -d -b ${data.branch} `
 
-                if (data.area_name.length > 0) {
+                if (data.area_name && data.area_name.length > 0) {
                     command += `-n ${data.area_name} `;
                 }
 

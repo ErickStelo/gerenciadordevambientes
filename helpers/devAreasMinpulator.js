@@ -279,7 +279,7 @@ module.exports = {
                 console.log('> Create a new ambient with params:', data);
                 var command = `./prepare_branch.sh -a -d -b ${data.branch} `
 
-                if (data.area_name && data.area_name.length > 0) {
+                if (data.area_name && data.area_name && data.area_name.length > 0) {
                     command += `-n ${data.area_name} `;
                 }
 
@@ -292,7 +292,7 @@ module.exports = {
                 command += `-H 172.31.0.60 -I webmaster -J pma2018 -p ${data.porta}`;
                 console.log('>', command);
                 
-                module.exports.notificarMattermost(`Iniciado a ciração da área ${data.area_name.length > 0 ? data.area_name : data.branch}! Acesse usando:\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br quando estiver pronta`, 'dev-ambientes')
+                module.exports.notificarMattermost(`Iniciado a ciração da área ${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}! Acesse usando:\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br quando estiver pronta`, 'dev-ambientes')
 
                 var CreateProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {
                     maxBuffer: 1024 * 5000
@@ -300,7 +300,7 @@ module.exports = {
                     if (stdout) {
                         creatingArea = false;
                         console.log('Starting instance');
-                        var StartProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
+                        var StartProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch}/projects/${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch} && pm2 start dev-processes-digital-ocean.json --env production${config.sshConection.length > 0 ?'"':''}`, (error, stdout, stderr) => {
                             if (error) {
                                 console.log('NAO FOI-1');
 
@@ -309,7 +309,7 @@ module.exports = {
                                 console.log('NAO FOI');
                             }
                             if (stdout) {
-                                module.exports.notificarMattermost(`A área ${data.area_name.length > 0 ? data.area_name : data.branch} foi criada! Acesse usando:\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br`, (data.usuario_mattermost != null && data.usuario_mattermost.length > 0 ? `@${data.usuario_mattermost}` : 'dev-ambientes'))
+                                module.exports.notificarMattermost(`A área ${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch} foi criada! Acesse usando:\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br`, (data.usuario_mattermost != null && data.usuario_mattermost.length > 0 ? `@${data.usuario_mattermost}` : 'dev-ambientes'))
                             }
                         })
                         console.log('Process ID (PID)', StartProcess.pid);

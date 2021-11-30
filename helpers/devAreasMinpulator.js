@@ -292,7 +292,7 @@ module.exports = {
                 command += `-H 172.31.0.60 -I webmaster -J pma2018 -p ${data.porta}`;
                 console.log('>', command);
                 
-                module.exports.notificarMattermost(`Iniciado a ciração da área ${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}! Acesse usando:\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br\nhttp://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br quando estiver pronta`, 'dev-ambientes')
+                module.exports.notificarMattermost(`Iniciado a criação da área ${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}! Acesse usando: http://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-admin.perigeus.com.br e http://${data.area_name && data.area_name.length > 0 ? data.area_name : data.branch}-site.perigeus.com.br quando estiver pronta`, 'dev-ambientes')
 
                 var CreateProcess = exec(`${config.sshConection.length > 0 ? config.sshConection + ' "':''}export TERM=xterm && cd ${config.pathToPrepareBranch} && ${command}${config.sshConection.length > 0 ?'"':''}`, {
                     maxBuffer: 1024 * 5000

@@ -1,8 +1,7 @@
-
 var app = new Vue({
     el: '#app',
     data: {
-        formCreate:{
+        formCreate: {
             clonar_data: false,
             server_cliente: null,
             porta: null,
@@ -11,10 +10,10 @@ var app = new Vue({
             client_name: null,
             usuario_mattermost: null
         },
-        serverList:[],
-        ambientsLists:[],
-        formatoExibicao:'lista',
-        sizes:[]
+        serverList: [],
+        ambientsLists: [],
+        formatoExibicao: 'lista',
+        sizes: []
     },
 
     methods: {
@@ -36,21 +35,20 @@ var app = new Vue({
                     icon: 'success',
                     confirmButtonText: 'Fechar'
                 })
-            }).catch(()=>{
+            }).catch(() => {
                 Swal.close();
                 Swal.fire({
                     title: 'Falha ao executar ação',
                     html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
-                    icon:'error',
+                    icon: 'error',
                     willClose: () => {}
                 });
             })
 
         },
         getSizes: function(area) {
-            console.log(area);
             axios({
                 method: 'get',
                 url: '/action/getSizes',
@@ -61,101 +59,105 @@ var app = new Vue({
 
             }).then(function(response) {
                 app.sizes = response.data.sizes
-            }).catch(()=>{
+            }).catch(() => {
                 Swal.close();
                 Swal.fire({
                     title: 'Falha ao executar ação',
                     html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
-                    icon:'error',
+                    icon: 'error',
                     willClose: () => {}
                 });
             })
         },
 
         removeArea: function(area) {
-            Swal.fire({
-                title: 'Removendo ambiente',
-                html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é removido, isso pode levar alguns minutos</p>',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                },
-                willClose: () => {}
-            })
-            axios({
-                method: 'post',
-                url: '/action/deleteAmbient',
-                data: {
-                    ambientName: area,
-                },
-                timeout: 60000
-
-            }).then(function(response) {
-                Swal.close();
+            app.checkPassword().then(r => {
                 Swal.fire({
-                    title: 'Successo!',
-                    text: 'O ambiente foi removido!',
-                    icon: 'success',
-                    confirmButtonText: 'Fechar'
-                }).then(result =>{
-                    app.getAmbients();
-                }).catch(()=>{
+                    title: 'Removendo ambiente',
+                    html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é removido, isso pode levar alguns minutos</p>',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    willClose: () => {}
+                })
+                axios({
+                    method: 'post',
+                    url: '/action/deleteAmbient',
+                    data: {
+                        ambientName: area,
+                    },
+                    timeout: 60000
+    
+                }).then(function(response) {
+                    Swal.close();
+                    Swal.fire({
+                        title: 'Successo!',
+                        text: 'O ambiente foi removido!',
+                        icon: 'success',
+                        confirmButtonText: 'Fechar'
+                    }).then(result => {
+                        app.getAmbients();
+                    }).catch(() => {
+                        Swal.close();
+                        Swal.fire({
+                            title: 'Falha ao executar ação',
+                            html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            icon: 'error',
+                            willClose: () => {}
+                        });
+                    })
+    
+                });
+            })
+        },
+
+        pullAmbient: function(area) {
+            app.checkPassword().then(r => {
+                Swal.fire({
+                    title: 'Atualizando ambiente',
+                    html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é atualizado</p>',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    willClose: () => {}
+                });
+                axios({
+                    method: 'post',
+                    url: '/action/pullAmbient',
+                    data: {
+                        ambientName: area,
+                    },
+                    timeout: 60000
+    
+                }).then(function(response) {
+                    Swal.close();
+                    Swal.fire({
+                        title: 'Successo!',
+                        text: 'Comando para pull no ambiente realizado!',
+                        icon: 'success',
+                        confirmButtonText: 'Fechar'
+                    }).then(result => {
+                        app.getAmbients();
+                    })
+                }).catch(() => {
                     Swal.close();
                     Swal.fire({
                         title: 'Falha ao executar ação',
                         html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
-                        icon:'error',
+                        icon: 'error',
                         willClose: () => {}
                     });
                 })
-    
-            });
-        },
-
-        pullAmbient: function(area) {
-            Swal.fire({
-                title: 'Atualizando ambiente',
-                html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é atualizado</p>',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                },
-                willClose: () => {}
-            });
-            axios({
-                method: 'post',
-                url: '/action/pullAmbient',
-                data: {
-                    ambientName: area,
-                },
-                timeout: 60000
-
-            }).then(function(response) {
-                Swal.close();
-                Swal.fire({
-                    title: 'Successo!',
-                    text: 'Comando para pull no ambiente realizado!',
-                    icon: 'success',
-                    confirmButtonText: 'Fechar'
-                }).then(result =>{
-                    app.getAmbients();
-                })
-            }).catch(()=>{
-                Swal.close();
-                Swal.fire({
-                    title: 'Falha ao executar ação',
-                    html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    icon:'error',
-                    willClose: () => {}
-                });
             })
         },
 
@@ -169,14 +171,14 @@ var app = new Vue({
             }).then(function(response) {
                 app.serverList = response.data.serversList
                 // console.log(response.data);
-            }).catch(()=>{
+            }).catch(() => {
                 Swal.close();
                 Swal.fire({
                     title: 'Falha ao executar ação',
                     html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
-                    icon:'error',
+                    icon: 'error',
                     willClose: () => {}
                 });
             })
@@ -189,19 +191,19 @@ var app = new Vue({
                 url: '/action/getAmbients',
                 data: {},
                 timeout: 60000
-                
+
             }).then(function(response) {
                 var ambientsOrder = [];
                 ambientsOrder = _.orderBy(response.data.ambientList, ['name'], ['asc']);
                 app.ambientsLists = ambientsOrder
-            }).catch(()=>{
+            }).catch(() => {
                 Swal.close();
                 Swal.fire({
                     title: 'Falha ao executar ação',
                     html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
-                    icon:'error',
+                    icon: 'error',
                     willClose: () => {}
                 });
             })
@@ -210,48 +212,49 @@ var app = new Vue({
 
         createArea: function() {
             var msg = '';
-            if(this.formCreate.clonar_data == true && this.formCreate.ServerCliente === null) msg+='<li><p>Servidor do cliente não selecionado</p></li>';
-            if(this.formCreate.porta == null || (this.formCreate.porta.trim()) == 0) msg+='<li><p>Não definida a porta para criação da área</p></li>';
-            if(this.formCreate.branch == null || (this.formCreate.branch.trim()) == 0) msg+='<li><p>Não definida a branch que irá rodar</p></li>';
-            if(this.formCreate.branch != null && this.formCreate.branch.split(' ').length > 1) msg+='<li><p>Não pode conter espaços na definição da branch</p></li>';
-            if(this.formCreate.area_name != null && (this.formCreate.area_name.split(' ')).length > 1) msg+='<li><p>Não pode conter espaços no nome da área</p></li>';
-            if(this.formCreate.client_name == null || (this.formCreate.client_name.trim()) == 0) msg+='<li><p>Não informado a pasta/nome do banco cliente</p></li>';
-            if(this.formCreate.client_name != null && (this.formCreate.client_name.split(' ')).length > 1) msg+='<li><p>Não pode conter espaços no pasta/nome do banco cliente</p></li>';
-            if(this.formCreate.clonar_data === true && (this.formCreate.server_cliente === 'null' || this.formCreate.server_cliente === null)) msg+='<li><p>Servidor do cliente não selecionado</p></li>';
+            if (this.formCreate.clonar_data == true && this.formCreate.ServerCliente === null) msg += '<li><p>Servidor do cliente não selecionado</p></li>';
+            if (this.formCreate.porta == null || (this.formCreate.porta.trim()) == 0) msg += '<li><p>Não definida a porta para criação da área</p></li>';
+            if (this.formCreate.branch == null || (this.formCreate.branch.trim()) == 0) msg += '<li><p>Não definida a branch que irá rodar</p></li>';
+            if (this.formCreate.branch != null && this.formCreate.branch.split(' ').length > 1) msg += '<li><p>Não pode conter espaços na definição da branch</p></li>';
+            if (this.formCreate.area_name != null && (this.formCreate.area_name.split(' ')).length > 1) msg += '<li><p>Não pode conter espaços no nome da área</p></li>';
+            if (this.formCreate.client_name == null || (this.formCreate.client_name.trim()) == 0) msg += '<li><p>Não informado a pasta/nome do banco cliente</p></li>';
+            if (this.formCreate.client_name != null && (this.formCreate.client_name.split(' ')).length > 1) msg += '<li><p>Não pode conter espaços no pasta/nome do banco cliente</p></li>';
+            if (this.formCreate.clonar_data === true && (this.formCreate.server_cliente === 'null' || this.formCreate.server_cliente === null)) msg += '<li><p>Servidor do cliente não selecionado</p></li>';
 
-            if(msg.length === 0){
+            if (msg.length === 0) {
 
-                // Swal.fire({
-                //     title: 'Criando ambiente',
-                //     html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é criado, isso pode levar alguns minutos</p>',
-                //     allowOutsideClick: false,
-                //     allowEscapeKey: false,    
-                //     didOpen: () => {
-                //         Swal.showLoading()
-                //     },
-                //     willClose: () => {}
-                // })
-                axios({
-                    method: 'post',
-                    url: '/action/createArea',
-                    data: this.formCreate,
-                    timeout: 0
-                }).then(function(response) {
-                    console.log(response.data);
-                    Swal.close();
-                    Swal.fire({
-                        title: `${response.data.icon === 'success' ? 'Sucesso!' : 'Erro!'}`,
-                        html: `${response.data.message}`,
-                        icon: `${response.data.icon}`,
-                        confirmButtonText: 'Fechar'
-                    }).then((result) => {
-                        if(response.data.icon === 'success'){
-                            window.location.reload(false); 
-                        }
+                app.checkPassword().then(() => {
+                    // Swal.fire({
+                    //     title: 'Criando ambiente',
+                    //     html: '<p style="font-size: 14px;">Aguarde enquando o ambiente é criado, isso pode levar alguns minutos</p>',
+                    //     allowOutsideClick: false,
+                    //     allowEscapeKey: false,    
+                    //     didOpen: () => {
+                    //         Swal.showLoading()
+                    //     },
+                    //     willClose: () => {}
+                    // })
+                    axios({
+                        method: 'post',
+                        url: '/action/createArea',
+                        data: this.formCreate,
+                        timeout: 0
+                    }).then(function(response) {
+                        console.log(response.data);
+                        Swal.close();
+                        Swal.fire({
+                            title: `${response.data.icon === 'success' ? 'Sucesso!' : 'Erro!'}`,
+                            html: `${response.data.message}`,
+                            icon: `${response.data.icon}`,
+                            confirmButtonText: 'Fechar'
+                        }).then((result) => {
+                            if (response.data.icon === 'success') {
+                                window.location.reload(false);
+                            }
+                        });
                     });
-                });
-
-            }else{
+                })
+            } else {
                 Swal.fire({
                     icon: 'error',
                     html: `
@@ -264,7 +267,7 @@ var app = new Vue({
                 });
             }
         },
-        
+
         checkPort: function() {
             if (app.formCreate.porta != null && app.formCreate.porta != '' && parseInt(app.formCreate.porta) >= 9000 && parseInt(app.formCreate.porta) <= 9999) {
                 console.log('> Checking port', app.formCreate.porta);
@@ -293,18 +296,18 @@ var app = new Vue({
                             timer: 2000
                         })
                     }
-                }).catch(()=>{
+                }).catch(() => {
                     Swal.close();
                     Swal.fire({
                         title: 'Falha ao executar ação',
                         html: '<p style="font-size: 14px;">Houve um erro ao executar ação ou o tempo para resposta terminou</p>',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
-                        icon:'error',
+                        icon: 'error',
                         willClose: () => {}
                     });
                 })
-            }else{
+            } else {
                 app.formCreate.porta = null;
                 Swal.fire({
                     title: `Porta inválida`,
@@ -315,7 +318,7 @@ var app = new Vue({
             }
         },
 
-        helpModal: function(campo){
+        helpModal: function(campo) {
             var message = 'Sem ajuda para este campo';
             switch (campo) {
                 case 'branch_name':
@@ -334,10 +337,33 @@ var app = new Vue({
                 icon: `info`,
                 confirmButtonText: 'Fechar'
             })
+        },
+
+        checkPassword: function() {
+            return new Promise((resolve, reject) => {
+                const defaultPass = 'U2FsdGVkX19sBl09bobBLF6XSeXSLKYCutjzNimedVo=';
+
+                let pass = prompt('Informe a chave de autorização');
+
+                let cyber = CryptoJS.AES.decrypt(defaultPass, 'm3t4sig#2021').toString(CryptoJS.enc.Utf8);
+
+                if (cyber.toString() === pass.toString()) {
+                    resolve({
+                        authorized: true
+                    })
+                    // alert('Autorizado');
+                } else {
+                    reject({
+                        authorized: false
+                    })
+                    alert('Não Autorizado. Chave de autorização inválida!')
+                }
+            })
         }
     },
-    mounted: function () {
+    mounted: function() {
         this.getDataForCreate();
         this.getSizes();
+
     },
 })

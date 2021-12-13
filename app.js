@@ -88,7 +88,8 @@ app.post('/action/checkport', async function(req, res) {
 
 app.get('/action/getDataForCreate', async function(req, res) {
     res.status(200).json({
-        serversList: config.serverList
+        serversList: config.serverList,
+        release: config.release != undefined ? config.release : ''
     })
 });
 

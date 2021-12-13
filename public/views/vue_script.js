@@ -13,7 +13,8 @@ var app = new Vue({
         serverList: [],
         ambientsLists: [],
         formatoExibicao: 'lista',
-        sizes: []
+        sizes: [],
+        lastRelease: ''
     },
 
     methods: {
@@ -169,7 +170,9 @@ var app = new Vue({
                 timeout: 60000
 
             }).then(function(response) {
-                app.serverList = response.data.serversList
+                app.serverList = response.data.serversList;
+                app.formCreate.branch = response.data.release;
+                app.lastRelease = response.data.release;
                 // console.log(response.data);
             }).catch(() => {
                 Swal.close();
@@ -214,13 +217,13 @@ var app = new Vue({
             var msg = '';
             if (this.formCreate.clonar_data == true && this.formCreate.ServerCliente === null) msg += '<li><p>Servidor do cliente não selecionado</p></li>';
             if (this.formCreate.porta == null || (this.formCreate.porta.trim()) == 0) msg += '<li><p>Não definida a porta para criação da área</p></li>';
-            if (this.formCreate.branch == null || (this.formCreate.branch.trim()) == 0) msg += '<li><p>Não definida a branch que irá rodar</p></li>';
+            if (this.formCreate.branch == null || (this.formCreate.branch.trim()) == 0) this.formCreate.branch = app.lastRelease;
             if (this.formCreate.branch != null && this.formCreate.branch.split(' ').length > 1) msg += '<li><p>Não pode conter espaços na definição da branch</p></li>';
             if (this.formCreate.area_name != null && (this.formCreate.area_name.split(' ')).length > 1) msg += '<li><p>Não pode conter espaços no nome da área</p></li>';
             if (this.formCreate.client_name == null || (this.formCreate.client_name.trim()) == 0) msg += '<li><p>Não informado a pasta/nome do banco cliente</p></li>';
             if (this.formCreate.client_name != null && (this.formCreate.client_name.split(' ')).length > 1) msg += '<li><p>Não pode conter espaços no pasta/nome do banco cliente</p></li>';
             if (this.formCreate.clonar_data === true && (this.formCreate.server_cliente === 'null' || this.formCreate.server_cliente === null)) msg += '<li><p>Servidor do cliente não selecionado</p></li>';
-
+            console.log('>>>>>>>>>>>', this.formCreate.branch);
             if (msg.length === 0) {
 
                 app.checkPassword().then(() => {
@@ -322,7 +325,7 @@ var app = new Vue({
             var message = 'Sem ajuda para este campo';
             switch (campo) {
                 case 'branch_name':
-                    message = 'Branch que deverá ser usada para criar a área';
+                    message = `Branch que deverá ser usada para criar a área. Para usar a release mais recente, informe <b>${app.lastRelease}</b>`;
                     break;
                 case 'area_name':
                     message = 'Necessário apenas quando já existir uma area usando a mesma branch, exemplo: releaseXXapresentacao, releaseXXdemonstracao. Na falta desse parametro, o nome da area será o mesmo da branch';

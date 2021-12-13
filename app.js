@@ -1,4 +1,5 @@
 var express = require('express');
+const { isBuffer } = require('lodash');
 var app = express();
 var path = require('path');
 var manipulator = require(path.join(__dirname, 'helpers/devAreasMinpulator.js'));
@@ -18,9 +19,16 @@ app.set('views', path.join(__dirname, '/public/views'));
 app.use(express.static(__dirname + '/public/views'));
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', async function(req, res) {
-    res.render('index',{
-        version: package.version
-    })
+    if(!config.manutencao){
+        res.render('index',{
+            version: package.version
+        })
+    }else{
+        res.render('manutencao',{
+            version: package.version
+        })
+
+    }
 });
 app.get('/action/getAmbients', async function(req, res) {
     manipulator.getAmbients().then(result =>{
